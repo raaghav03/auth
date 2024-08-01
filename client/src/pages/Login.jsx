@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   async function loginUser(e) {
     e.preventDefault();
     try {
@@ -11,9 +13,17 @@ function Login() {
         email,
         password,
       });
-      console.log(response.data);
+
+      if (response.data.success) {
+        alert("login successful");
+        localStorage.setItem("token", response.data.user);
+        navigate("/dashboard");
+      } else {
+        alert("wrong credentials");
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert("An unexpected error occurred. Please try again later.");
     }
   }
   return (
