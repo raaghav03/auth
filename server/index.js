@@ -7,8 +7,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
-console.log(jwtSecret);
 const app = express();
+const { z } = require("zod");
 app.use(express.json());
 app.use(
   cors({
@@ -17,12 +17,16 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  })
-);
+const registerSchema = z.object({
+  email: z.string().email(),
+  username: z.string().min(3).max(20),
+  password: z.string().min(6),
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
 
 try {
   mongoose.connect(process.env.MONGO_URI).then(console.log("connected to db"));
@@ -48,22 +52,17 @@ const verifyToken = (req, res, next) => {
 
 app.post("/auth/register", async (req, res) => {
   try {
-    const newPassword = await bcrypt.hash(req.body.password, 10);
-    const email = req.body.email;
+    const { email, username, password } = registerSchema.safeParse(req.body);
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
         .status(400)
         .json({ msg: "User already exists, please try a different email ID" });
     }
-
-    const user = await User.create({
-      email: req.body.email,
-      username: req.body.username,
-      password: newPassword,
-    });
+    const newPassword = await bcrypt.hash(password, 10);
+    const user = new User({ email, username, password: newPassword });
     await user.save();
-    res.json({ msg: "User added" });
+    res.status(201).json({ msg: "User added" });
   } catch (error) {
     console.log(error);
     res.json({ msg: "Some error occurred" });
@@ -72,8 +71,10 @@ app.post("/auth/register", async (req, res) => {
 
 app.post("/auth/login", async (req, res) => {
   try {
+    const { email, password } = loginSchema.parse(req.body);
+
     const user = await User.findOne({
-      email: req.body.email,
+      email,
     });
     if (!user) {
       res.json({ error: "invlaid usage" });

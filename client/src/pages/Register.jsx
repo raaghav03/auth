@@ -32,7 +32,7 @@ function App() {
             }}
           />
           <input
-            type="email"
+            type="text"
             placeholder="email"
             value={email}
             onChange={(e) => {
