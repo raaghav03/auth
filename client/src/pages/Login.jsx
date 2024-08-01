@@ -1,16 +1,13 @@
 import { useState } from "react";
-import "./App.css";
 import axios from "axios";
 
-function App() {
-  const [username, setName] = useState("");
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  async function registerUser(e) {
+  async function loginUser(e) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
-        username,
+      const response = await axios.post("http://localhost:3000/auth/login", {
         email,
         password,
       });
@@ -21,16 +18,8 @@ function App() {
   }
   return (
     <>
-      <h1>register</h1>
-      <form onSubmit={registerUser}>
-        <input
-          type="text"
-          placeholder="name"
-          value={username}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-        />
+      <h1>login</h1>
+      <form onSubmit={loginUser}>
         <input
           type="email"
           placeholder="email"
@@ -47,10 +36,10 @@ function App() {
             setPassword(e.target.value);
           }}
         />
-        <input type="submit" value="register" />
+        <input type="submit" value="login" />
       </form>
     </>
   );
 }
 
-export default App;
+export default Login;
