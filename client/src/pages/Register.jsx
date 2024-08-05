@@ -8,11 +8,14 @@ function App() {
   async function registerUser(e) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://auth-backend-phi.vercel.app/auth/register",
+        {
+          username,
+          email,
+          password,
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.log(error);

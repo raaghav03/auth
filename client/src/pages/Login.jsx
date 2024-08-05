@@ -9,10 +9,13 @@ function Login() {
   async function loginUser(e) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://auth-backend-phi.vercel.app/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.data.success) {
         alert("login successful");
