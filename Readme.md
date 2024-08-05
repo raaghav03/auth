@@ -36,3 +36,4 @@ The purpose of building authentication was to understand `jsonwebtoken` in depth
 - [ ] Better Error Handling
 - [ ] Rate Limiting
 - [ ] Deployment
+- [ ] Adding explanatory code snippets in Readme

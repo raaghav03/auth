@@ -12,7 +12,7 @@ const { z } = require("zod");
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["https://auth-two-topaz.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -119,6 +119,5 @@ app.get("/api/dashboard", verifyToken, async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server started at 3000");
-});
+const port = process.env.PORT || 3000;
+module.exports = app;
